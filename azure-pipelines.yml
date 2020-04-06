@@ -5,15 +5,14 @@
 
 trigger:
 - master
-jobs:
-- job: A
-  pool:
+
+pool:
     vmImage: 'windows-latest'
 
     variables:
     buildConfiguration: 'Release'
 
-  steps:
+steps:
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
 
