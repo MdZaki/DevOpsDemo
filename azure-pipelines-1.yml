@@ -5,22 +5,14 @@
 
 trigger:
 - master
-jobs:
-- job: Build
+
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
 
-  steps:
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
-
-    - script: npm test
-    - task: PublishBuildArtifacts@1
-      inputs:
-      pathtoPublish: '$(System.DefaultWorkingDirectory)'
-      artifactName: WebSite
-
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
 
