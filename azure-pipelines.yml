@@ -1,27 +1,11 @@
-https://www.dotnetcurry.com/devops/1522/azure-devops-yaml-ci-cd-pipelines
-
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-trigger:
-- master
-
 pool:
-  vmImage: 'windows-latest'
-
-variables:
-  buildConfiguration: 'Release'
-
-steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-  
-  
--------------------------------------------------------------
-
+  name: Azure Pipelines
 #Your build pipeline references an undefined variable named ‘Parameters.RestoreBuildProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘Parameters.RestoreBuildProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references an undefined variable named ‘Parameters.TestProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 
 steps:
 - task: DotNetCoreCLI@2
@@ -30,26 +14,12 @@ steps:
     command: restore
     projects: '$(Parameters.RestoreBuildProjects)'
 
------------------------------------------------------------
-
-
-#Your build pipeline references an undefined variable named ‘Parameters.RestoreBuildProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-
-steps:
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     projects: '$(Parameters.RestoreBuildProjects)'
     arguments: '--configuration $(BuildConfiguration)'
 
-
----------------------------------------------------------
-
-#Your build pipeline references an undefined variable named ‘Parameters.TestProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-
-steps:
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
@@ -57,13 +27,6 @@ steps:
     projects: '$(Parameters.TestProjects)'
     arguments: '--configuration $(BuildConfiguration)'
 
-
----------------------------------------------------------
-
-
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-
-steps:
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
@@ -72,84 +35,8 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
 
-----------------------------------------------------------
-
-steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
-  condition: succeededOrFailed()	
-
------------------------- Ubuntu Steps from PDF
-
-# test and upload my code as an artifact named WebSite
-jobs:
-- job: Build
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: npm test
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(System.DefaultWorkingDirectory)'
-      artifactName: WebSite
-# download the artifact and deploy it only if the build job succeeded
-- job: Deploy
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - checkout: none #skip checking out the default repository resource
-  - task: DownloadBuildArtifacts@0
-  displayName: 'Download Build Artifacts'
-  inputs:
-    artifactName: WebSite
-    downloadPath: $(System.DefaultWorkingDirectory)
-  dependsOn: Build
-  condition: succeeded()
-
-
-
------------------------- Ubuntu Steps
-trigger:
-- master
-jobs:
-- job: Build
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  buildConfiguration: 'Release'
-
-steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-  
-# test and upload my code as an artifact named WebSite
-- job: Build
-pool:
-vmImage: 'ubuntu-latest'
-steps:
-- script: npm test
-- task: PublishBuildArtifacts@1
-inputs:
-pathtoPublish: '$(System.DefaultWorkingDirectory)'
-artifactName: WebSite
-# download the artifact and deploy it only if the build job succeeded
-- job: Deploy
-pool:
-vmImage: 'ubuntu-latest'
-steps:
-- checkout: none #skip checking out the default repository resource
-- task: DownloadBuildArtifacts@0
-displayName: 'Download Build Artifacts'
-inputs:
-artifactName: WebSite
-downloadPath: $(System.DefaultWorkingDirectory)
-dependsOn: Build
-condition: succeeded()
-
----------------------------------
-4,421 326 114 07-Apr
-4,789 353 124 07-Apr
-5,194 402 149 08-Apr 10:00 AM
+  condition: succeededOrFailed()
